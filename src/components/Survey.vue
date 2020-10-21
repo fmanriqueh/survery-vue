@@ -158,6 +158,7 @@
     methods: {
       clear(){
         this.$refs.form.reset()
+        this.$v.$reset()
       },
       onSubmit: function(){
         this.$v.$touch()
@@ -165,8 +166,16 @@
         if (this.$v.$pending || this.$v.$error) return;
 
         const URI = "http://localhost:8000/api/client"
-        this.$http.post(URI).then((response) => {
-          console.log(response)
+        this.$http.post(URI, {
+          name:this.name,
+          document_type:this.document_type,
+          document:this.document,
+          temperature:this.temperature,
+          store:this.store,
+          symptoms:this.symptoms? 1:0,
+        }).then(() => {
+          this.$refs.form.reset()
+          this.$v.$reset()
         })
         .catch((error) => {
           console.error(error)
